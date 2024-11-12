@@ -1,18 +1,12 @@
 #include "Novelist.h"
-#include <iostream>
-#include <conio.h>
-#include "check.h"
-#include <Windows.h>
-
 // Конструктор по умолчанию
 Novelist::Novelist() : fio(""), Byear(0), Dyear(0), bio("") {
     std::cout << "Вызван конструктор класса Novelist\n";
 }
 
 // Конструктор с параметрами
-Novelist::Novelist(const std::string& f, const int& By, const int& Dy, const std::string& w, const std::string& b)
-    : fio(f), Byear(By), Dyear(Dy), bio(b) {
-    works.push_back(w);
+Novelist::Novelist(const std::string& f, const int& By, const int& Dy, const vector<string>& w, const std::string& b) : fio(f), Byear(By), Dyear(Dy),works(w), bio(b) {
+   // works.push_back(w);
     std::cout << "Вызван конструктор с параметрами класса Novelist\n";
 }
 
@@ -42,8 +36,8 @@ void Novelist::set_BDNovel(int By, int Dy) {
     }
 }
 
-void Novelist::set_WNovel(std::string w) {
-    works.push_back(w);
+void Novelist::set_WNovel(vector<string> w) {
+    this->works = w;
 }
 
 void Novelist::set_bNovel(std::string b) {
@@ -138,4 +132,32 @@ void Novelist::edit_inf() {
             break;
         }
     }
+}
+void Novelist::load_from_file(istream& in) {
+    //getline(in, fio);
+    in >> Byear >> Dyear;
+    //getline(in, bio);
+    //in.ignore();  // Игнорируем символ новой строки после Dyear
+    string works_line;
+    getline(in, works_line);
+    works.clear();
+    stringstream ss(works_line);
+    string work;
+    while (getline(ss, work, ',')) {  // Работы разделены запятыми
+        works.push_back(work);
+    }
+    getline(in, fio);
+    getline(in, bio);
+}
+
+void Novelist::save_to_file(ostream& out) {
+    out << "Novelist\n";
+    out << Byear << ' ' << Dyear;
+    for (size_t i = 0; i < works.size(); ++i) {
+        out << works[i];
+        if (i != works.size() - 1) out << ',';  // Запятая между работами
+    }
+    out << '\n';
+    out << fio << '\n';
+    out << bio << '\n';
 }

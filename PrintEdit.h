@@ -13,7 +13,8 @@ public:
     virtual void print() = 0;
     virtual void edit_inf() = 0;
 
-  
+    virtual void save_to_file(ostream& in) = 0;
+    virtual void load_from_file(istream& out) = 0;
 
     
 };

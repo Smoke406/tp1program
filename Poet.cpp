@@ -1,7 +1,4 @@
 #include "Poet.h"
-#include "check.h"
-#include <conio.h>
-#include <Windows.h>
 
 Poet::Poet() :fio(""), Byear(0), Dyear(0) { cout << "Вызван конструктор класса Poet\n"; };
 Poet::Poet(const string& f, const int& By, const int& Dy, const vector<string>& w) :fio(f), Byear(By), Dyear(Dy), works(w) {
@@ -10,11 +7,9 @@ Poet::Poet(const Poet& tmp) : fio(tmp.fio), Byear(tmp.Byear), Dyear(tmp.Dyear), 
 	cout << "Вызван конструктор копирования класса Poet\n";
 }
 Poet::~Poet() { cout << "Вызван деструктор класса Poet\n"; }
-
 void Poet::set_FPoet(string f) {
 	this->fio = f;
 }
-
 void Poet::set_BDPoet(int By, int Dy) {
 	if ((By < Dy)&&((By+112)<Dy))
 	{
@@ -45,7 +40,6 @@ vector<string> Poet::get_WPoet()
 {
 	return this->works;
 }
-
 void Poet::print() {
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
@@ -57,8 +51,6 @@ void Poet::print() {
 	}
 	cout << endl;
 }
-
-// Переопределение метода для редактирования информации
 void Poet::edit_inf() {
     cout << "Редактирование информации о поэте:\n";
     cout << "1. Изменить имя\n";
@@ -107,31 +99,30 @@ void Poet::edit_inf() {
         }
     }
 }
+void Poet::load_from_file(istream& in) {
+    //getline(in, fio);
+    
+    in >> Byear >> Dyear;
+    string works_line;
+    getline(in, works_line);
+    works.clear();
+    stringstream ss(works_line);
+    string work;
+    while (getline(ss, work, ',')) {  // Работы разделены запятыми
+        works.push_back(work);
+    }
+    getline(in, fio);
+}
 
-// Переопределение метода для загрузки данных из файла
-//void Poet::load_from_file(istream& in) {
-//    getline(in, name);
-//    in >> birthYear >> deathYear;
-//    in.ignore();
-//
-//    int numWorks;
-//    in >> numWorks;
-//    in.ignore();
-//    works.clear();
-//    for (int i = 0; i < numWorks; ++i) {
-//        string work;
-//        getline(in, work);
-//        works.push_back(work);
-//    }
-//}
-//
-//// Переопределение метода для сохранения данных в файл
-//void Poet::save_to_file(ostream& out) const {
-//    out << "Poet\n";
-//    out << name << '\n';
-//    out << birthYear << ' ' << deathYear << '\n';
-//    out << works.size() << '\n';
-//    for (const auto& work : works) {
-//        out << work << '\n';
-//    }
-//}
+void Poet::save_to_file(ostream& out) {
+    out << "Poet\n";
+    //out << fio << ':';
+    out << Byear << ' ' << Dyear;
+    for (size_t i = 0; i < works.size(); ++i) {
+        out << works[i];
+        if (i != works.size() - 1) out << ',';  // Запятая между работами
+    }
+    out << "\n";
+    out << fio;
+    out << '\n';
+}

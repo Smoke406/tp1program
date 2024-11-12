@@ -1,6 +1,9 @@
 #pragma once
 #include "PrintEdit.h"
-
+#include "check.h"
+#include <conio.h>
+#include <Windows.h>
+#include <sstream>
 class Poet : public PrintEdit {
 private:
 	string fio;
@@ -23,4 +26,6 @@ public:
 
 	void print() override;
 	void edit_inf() override;
+	void load_from_file(istream&) override;
+	void save_to_file(ostream&) override;
 };

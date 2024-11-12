@@ -2,30 +2,25 @@
 #include <iostream>
 #include <conio.h>
 #include <Windows.h>
-
-// Конструктор по умолчанию
+#include <sstream>
 Scifi::Scifi() : fio(""), moviesAdapted(false) {
     std::cout << "Вызван конструктор класса Scifi\n";
 }
 
-// Конструктор с параметрами
 Scifi::Scifi(const std::string& f, const std::vector<std::string>& w, bool adapted)
     : fio(f), works(w), moviesAdapted(adapted) {
     std::cout << "Вызван конструктор с параметрами класса Scifi\n";
 }
 
-// Конструктор копирования
 Scifi::Scifi(const Scifi& tmp)
     : fio(tmp.fio), works(tmp.works), moviesAdapted(tmp.moviesAdapted) {
     std::cout << "Вызван конструктор копирования класса Scifi\n";
 }
 
-// Деструктор
 Scifi::~Scifi() {
     std::cout << "Вызван деструктор класса Scifi\n";
 }
 
-// Методы для установки значений
 void Scifi::set_FScifi(const std::string& f) {
     this->fio = f;
 }
@@ -38,7 +33,6 @@ void Scifi::set_MoviesAdapted(bool adapted) {
     this->moviesAdapted = adapted;
 }
 
-// Методы для получения значений
 std::string Scifi::get_FScifi() const {
     return this->fio;
 }
@@ -51,7 +45,6 @@ bool Scifi::get_MoviesAdapted() const {
     return this->moviesAdapted;
 }
 
-// Метод для вывода информации о фантасте
 void Scifi::print() {
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
@@ -64,7 +57,6 @@ void Scifi::print() {
     std::cout << "\nЭкранизации: " << (moviesAdapted ? "Да" : "Нет") << std::endl;
 }
 
-// Метод для редактирования информации о фантасте
 void Scifi::edit_inf() {
     std::cout << "Редактирование информации о научном фантасте:\n";
     std::cout << "1. Изменить имя\n";
@@ -114,4 +106,32 @@ void Scifi::edit_inf() {
             break;
         }
     }
+}
+void Scifi::load_from_file(std::istream& in) {
+    string works_line;
+    getline(in, works_line);
+    getline(in, works_line);
+    works.clear();  
+    stringstream ss(works_line);  
+    string work;
+    while (std::getline(ss, work, ',')) {  
+        works.push_back(work);  
+    }
+    getline(in, fio);
+    string adaptation;
+    in >> adaptation;  
+    moviesAdapted = (adaptation == "true");
+}
+
+void Scifi::save_to_file(std::ostream& out) {
+
+    out << "Scifi\n";
+    for (size_t i = 0; i < works.size(); ++i) {
+        out << works[i];
+        if (i != works.size() - 1) out << ','; 
+    }
+    out << '\n';
+    out << fio << '\n';
+    out << (moviesAdapted ? "true" : "false") << '\n';
+
 }
